@@ -78,7 +78,10 @@ while True:
                     horimetro_antigo = float(item["horimetro"])
                     if float(coluna[2]) < horimetro_antigo:
                         coluna[3] = "Verificar - Horimetro menor que anterior"
+                    if float(coluna[2]) == horimetro_antigo:
+                        coluna[3] = "Verificar - Horimetro igual ao anterior"
                     break
+                    
 
         # Retorna os dados processados sem exclusão de duplicados
         dados_processados = [header] + linhas
