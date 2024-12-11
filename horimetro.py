@@ -60,6 +60,10 @@ while True:
 
         for coluna in linhas:
             coluna[2] = str(coluna[2])
+            coluna[1] = coluna[1][:10]
+            coluna[1] = coluna[1].replace("/", "-")
+            print(hoje)
+            print(coluna[1])
 
             if coluna[0].startswith("C"):
                 coluna[2] = coluna[2].replace(".", "")
@@ -71,17 +75,20 @@ while True:
                 coluna[2] = coluna[2].replace(".", "")
 
             if len(coluna[2]) < 4 or len(coluna[2]) > 7:
-                coluna[3] = "Verificar - Quantidade de digitos"
+                coluna[3] = "Fora do padrão"
 
             for item in dicionario:
                 if item["tag"] == coluna[0]:
                     horimetro_antigo = float(item["horimetro"])
+
+                    if horimetro_antigo == float(coluna[2]) and coluna[1] == hoje:
+                        coluna[3] = "Horimetro igual ao anterior"
+                 
                     if float(coluna[2]) < horimetro_antigo:
-                        coluna[3] = "Verificar - Horimetro menor que anterior"
-                    if float(coluna[2]) == horimetro_antigo:
-                        coluna[3] = "Verificar - Horimetro igual ao anterior"
-                    break
-                    
+                        coluna[3] = "Horimetro menor que anterior"
+        
+    
+
 
         # Retorna os dados processados sem exclusão de duplicados
         dados_processados = [header] + linhas
@@ -127,13 +134,13 @@ while True:
     hoje = datetime.now().strftime('%d-%m-%Y')
     downloads_path = Path.home() / "Downloads"
     downloads_path = str(downloads_path)
+
     caminho = downloads_path + f"\\Horimetros {hoje}.xlsx"
 
     data_emissão()
     diretorio_relatorio = downloads_path + "//" + input("Informe o nome do arquivo de relatório: ") + ".xlsx"
     diretorio_horimetro = downloads_path + "//" + input("Informe o nome de arquivo do último horimetro: ") + ".xlsx"
     os.system("cls")
-
 
     dados_grm = puxar_dados("grm", diretorio_relatorio)
     dados_ultimo_horimetro = puxar_dados("horimetro", diretorio_horimetro)
@@ -142,7 +149,5 @@ while True:
     configuracao_estilos()
     wb.save(caminho)
     print(f"Dados salvos com sucesso em {caminho}")
-
- 
 
     # Salvar o arquivo
