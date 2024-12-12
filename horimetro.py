@@ -60,10 +60,6 @@ while True:
 
         for coluna in linhas:
             coluna[2] = str(coluna[2])
-            coluna[1] = coluna[1][:10]
-            coluna[1] = coluna[1].replace("/", "-")
-            print(hoje)
-            print(coluna[1])
 
             if coluna[0].startswith("C"):
                 coluna[2] = coluna[2].replace(".", "")
@@ -80,16 +76,14 @@ while True:
             for item in dicionario:
                 if item["tag"] == coluna[0]:
                     horimetro_antigo = float(item["horimetro"])
+                    coluna[2] = float(coluna[2])
 
-                    if horimetro_antigo == float(coluna[2]) and coluna[1] == hoje:
+                    if horimetro_antigo == coluna[2] and coluna[1][:10].replace("/", "-") == hoje:
                         coluna[3] = "Horimetro igual ao anterior"
                  
-                    if float(coluna[2]) < horimetro_antigo:
+                    if coluna[2] < horimetro_antigo:
                         coluna[3] = "Horimetro menor que anterior"
         
-    
-
-
         # Retorna os dados processados sem exclusão de duplicados
         dados_processados = [header] + linhas
         return dados_processados
