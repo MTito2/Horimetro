@@ -2,13 +2,12 @@ import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 from openpyxl.utils import get_column_letter
-from datetime import datetime
+from datetime import datetime, date
 from collections import defaultdict
 from pathlib import Path
 import os
 
 while True:
-    # Puxa os dados do relatorio GRM
     def puxar_dados(nome, caminho):
         if nome == "grm":
             wb = openpyxl.load_workbook(caminho)
@@ -52,13 +51,21 @@ while True:
             dados_horimetros_anterior.append(dicionario)
         return dados_horimetros_anterior
 
-    # Processar valores e observações
     def processar_dados(dados):
         header = ["Tag", "Data", "Horimetro", "Observação"]
         linhas = dados
         dicionario = transformar_dados_em_dicionario(dados_ultimo_horimetro)
 
         for coluna in linhas:
+            hoje = date.today()
+            data = coluna[1].split("/")
+            dia = int(data[0])
+            mes = int(data[1])
+            ano = int(data[2][:4])
+            data = date(ano, mes, dia)
+
+            diferenca = hoje - data
+
             coluna[2] = str(coluna[2])
 
             if coluna[0].startswith("C"):
@@ -71,20 +78,26 @@ while True:
                 coluna[2] = coluna[2].replace(".", "")
 
             if len(coluna[2]) < 4 or len(coluna[2]) > 7:
-                coluna[3] = "Fora do padrão"
+                coluna[3] += "Fora do padrão  "
 
+            if diferenca.days >= 7:
+                coluna[3] += "Horimetro desatualizado  "
+    
             for item in dicionario:
                 if item["tag"] == coluna[0]:
                     horimetro_antigo = float(item["horimetro"])
                     coluna[2] = float(coluna[2])
 
                     if horimetro_antigo == coluna[2] and coluna[1][:10].replace("/", "-") == hoje:
-                        coluna[3] = "Horimetro igual ao anterior"
+                        coluna[3] += "Horimetro igual ao anterior  "
                  
                     if coluna[2] < horimetro_antigo:
-                        coluna[3] = "Horimetro menor que anterior"
-        
-        # Retorna os dados processados sem exclusão de duplicados
+                        coluna[3] += "Horimetro menor que anterior"
+
+            coluna[3] = coluna[3].replace("  ", " | ")
+            if coluna[3][-3:] == " | ":
+                coluna[3] = coluna[3].replace(" | ", "")
+
         dados_processados = [header] + linhas
         return dados_processados
 
@@ -115,7 +128,6 @@ while True:
                 cell.alignment = center_alignment
                 cell.border = thin_border
 
-    # Ajustar largura das colunas automaticamente
         for col_idx, col in enumerate(ws.iter_cols(min_row=2, max_row=ws.max_row, max_col=ws.max_column), start=1):
             max_length = max(len(str(cell.value or "")) for cell in col)
             col_letter = get_column_letter(col_idx)  # Captura a letra da coluna pelo índice
@@ -143,5 +155,3 @@ while True:
     configuracao_estilos()
     wb.save(caminho)
     print(f"Dados salvos com sucesso em {caminho}")
-
-    # Salvar o arquivo
