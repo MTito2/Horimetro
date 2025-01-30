@@ -68,7 +68,7 @@ while True:
 
             coluna[2] = str(coluna[2])
 
-            if coluna[0].startswith("C"):
+            if coluna[0].startswith("C") and len(coluna[2]) <= 5:
                 coluna[2] = coluna[2].replace(".", "")
 
             elif coluna[0].startswith("E") and len(coluna[2]) <= 5:
@@ -130,7 +130,7 @@ while True:
 
         for col_idx, col in enumerate(ws.iter_cols(min_row=2, max_row=ws.max_row, max_col=ws.max_column), start=1):
             max_length = max(len(str(cell.value or "")) for cell in col)
-            col_letter = get_column_letter(col_idx)  # Captura a letra da coluna pelo índice
+            col_letter = get_column_letter(col_idx) 
             ws.column_dimensions[col_letter].width = max_length + 2
 
     wb = Workbook()
