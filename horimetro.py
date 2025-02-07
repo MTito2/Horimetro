@@ -74,9 +74,6 @@ while True:
             elif coluna[0].startswith("E") and len(coluna[2]) <= 5:
                 coluna[2] = coluna[2].replace(".", "")
 
-            elif coluna[0].startswith("T") and len(coluna[2]) <= 5:
-                coluna[2] = coluna[2].replace(".", "")
-
             if len(coluna[2]) < 4 or len(coluna[2]) > 7:
                 coluna[3] += "Fora do padrão  "
 
