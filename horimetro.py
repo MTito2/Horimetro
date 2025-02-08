@@ -141,8 +141,8 @@ while True:
     caminho = downloads_path + f"\\Horimetros {hoje}.xlsx"
 
     data_emissão()
-    diretorio_relatorio = downloads_path + "//" + input("Informe o nome do arquivo de relatório: ") + ".xlsx"
-    diretorio_horimetro = downloads_path + "//" + input("Informe o nome de arquivo do último horimetro: ") + ".xlsx"
+    diretorio_relatorio = downloads_path + "//" + input("Informe o nome do arquivo de relatório: -> xlsx ") + ".xlsx"
+    diretorio_horimetro = downloads_path + "//" + input("Informe o nome de arquivo do último horimetro: -> xlsx ") + ".xlsx"
     os.system("cls")
 
     dados_grm = puxar_dados("grm", diretorio_relatorio)
