@@ -79,7 +79,7 @@ while True:
 
             if diferenca.days >= 7:
                 coluna[3] += "Horimetro desatualizado  "
-    
+
             for item in dicionario:
                 if item["tag"] == coluna[0]:
                     horimetro_antigo = float(item["horimetro"])
@@ -89,7 +89,12 @@ while True:
                         coluna[3] += "Horimetro igual ao anterior  "
                  
                     if coluna[2] < horimetro_antigo:
-                        coluna[3] += "Horimetro menor que anterior"
+                        coluna[3] += "Horimetro menor que anterior "
+
+                    elif coluna[2] >= 10000:
+                        coluna[3] += "Provável 0 excedente "
+
+
 
             coluna[3] = coluna[3].replace("  ", " | ")
             if coluna[3][-3:] == " | ":
